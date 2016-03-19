@@ -1,0 +1,30 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Anna Tomka",
+        "email": "tomkaanna@gmail.com"
+      },
+      "libraryName": {
+        "original": "ng-c3-export",
+        "camelized": "ngC3Export",
+        "dasherized": "ng-c3-export",
+        "slugified": "ng-c3-export",
+        "parts": [
+          "ng",
+          "c3",
+          "export"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/ng-c3-export",
+      "libraryUnitTestDirectory": "test/unit/ng-c3-export",
+      "libraryUnitE2eDirectory": "test/e2e/ng-c3-export"
+    }
+  }
+}
