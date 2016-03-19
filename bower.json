@@ -8,9 +8,12 @@
     }
   ],
   "keywords": [
+    "c3",
     "c3.js",
     "angularjs",
-    "graph"
+    "graph",
+    "export",
+    "image"
   ],
   "main": [
     "dist/ng-c3-export.js"

@@ -8,6 +8,14 @@
   "dependencies": {
     "gulp-sass": "2.2.0"
   },
+  "keywords": [
+    "c3",
+    "c3.js",
+    "angularjs",
+    "graph",
+    "export",
+    "image"
+  ],
   "devDependencies": {
     "chai": "^1.9.1",
     "chai-jquery": "^1.2.3",
