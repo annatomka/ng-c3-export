@@ -21,12 +21,22 @@ bower install ng-c3-export
 
 ## Usage
 
-### 1. step
+### 0. step
 
 First include the library files `ng-c3-export.js` and `ng-c3-export.css` (or the minified version of them). 
 
 > If you use a tool like e.g. **wiredep** that wires your bower dependencies, you don't have to worry about this step.
 > It will find them because they are configured in the bower.json file.
+
+### 1. step 
+
+Add **ngC3Export** module to your angular module as dependency:
+
+```javascript
+var app = angular.module('c3ExportTest', [
+  'ngC3Export'
+]);
+```
 
 ### 2. step
 
@@ -36,7 +46,7 @@ Put the export-chart directive on the element you use for your c3 chart:
 <div id="my-line-chart" export-chart exported-file-name="My line chart exported"></div>
 ```
 
-And you're ready to go!
+And you're ready to go! Now you should be able to see a grey download icon on your chart in the top right corner.
 
 ## Options
 
