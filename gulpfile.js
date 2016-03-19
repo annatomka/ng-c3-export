@@ -7,6 +7,8 @@ var path = require('path');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
+var sass = require('gulp-sass');
+var cssmin = require('gulp-cssmin');
 
 /**
  * File patterns
@@ -46,11 +48,22 @@ gulp.task('build', function() {
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('sass', function () {
+  gulp.src([sourceDirectory,'/**/*.scss'].join(""))
+    .pipe(plumber())
+    .pipe(sass())
+    .pipe(concat('ng-c3-export.css'))
+    .pipe(gulp.dest('./dist'))
+    .pipe(cssmin())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest('./dist'));
+});
+
 /**
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('test-src', 'build', done);
+  runSequence('test-src', 'build', 'sass', done);
 });
 
 /**
@@ -63,6 +76,9 @@ gulp.task('watch', function () {
 
   // watch test files and re-run unit tests when changed
   gulp.watch(path.join(testDirectory, '/**/*.js'), ['test-src']);
+
+  // watch .scss file changes
+  gulp.watch( [sourceDirectory,'/**/*.scss'].join(""), ['sass']);
 });
 
 /**

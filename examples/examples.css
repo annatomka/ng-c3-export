@@ -1,0 +1,10 @@
+body{
+  text-align: center;
+  padding:25px;
+}
+
+#my-line-chart, #my-combination-chart{
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}

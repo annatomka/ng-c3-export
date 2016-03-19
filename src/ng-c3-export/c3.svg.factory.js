@@ -3,7 +3,7 @@
 
   angular
     .module('ngC3Export')
-    .factory('ExportService', function () {
+    .factory('SvgFactory', function () {
 
       return {
         createSVGContent: function (svg, styles) {

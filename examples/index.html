@@ -2,12 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ngC3Export component test</title>
+  <title>ngC3Export component examples</title>
+  <link rel="stylesheet" href="examples.css">
   <link rel="stylesheet" href="../bower/c3/c3.css">
+  <link rel="stylesheet" href="../dist/ng-c3-export.css">
+  <link rel="stylesheet" href="../bower/font-awesome/css/font-awesome.css">
 </head>
 <body ng-app="c3ExportTest">
-<h2>ngC3Export test</h2>
-<div dummy-chart export-chart="images" chart-title="dwell time report"></div>
+<h1>ngC3Export examples</h1>
+
+<div ng-controller="ChartController">
+  <h3>Line chart export with given file name</h3>
+
+  <p>In this example you can add name to the exported file by filling the exported-file-name attribute.</p>
+
+  <div id="my-line-chart" export-chart exported-file-name="My line chart exported"></div>
+
+  <h3>Combination chart export without given file name</h3>
+
+  <p>In this example no file name was given, so the exported file name will be the default one.</p>
+
+  <div id="my-combination-chart" export-chart></div>
+</div>
 
 <script src="../bower/angular/angular.js"></script>
 <script src="../bower/c3/c3.js"></script>
@@ -15,6 +31,6 @@
 <script src="../dist/ng-c3-export.js"></script>
 <script src="../bower/jquery/dist/jquery.js"></script>
 <script src="../bower/canvg/dist/canvg.bundle.js"></script>
-<script src="test.js"></script>
+<script src="examples.js"></script>
 </body>
 </html>
