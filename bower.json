@@ -27,7 +27,8 @@
   ],
   "dependencies": {
     "jquery": "~2.2.2",
-    "font-awesome": "~4.5.0"
+    "font-awesome": "~4.5.0",
+    "canvas2image": "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.0",

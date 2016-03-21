@@ -3,7 +3,7 @@ body{
   padding:25px;
 }
 
-#my-line-chart, #my-combination-chart{
+#my-line-chart, #my-combination-chart, #my-pie-chart {
   width: 60%;
   margin-left: auto;
   margin-right: auto;

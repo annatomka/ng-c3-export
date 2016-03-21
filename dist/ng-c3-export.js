@@ -32,7 +32,7 @@
     .directive('exportChart', exportChartDirective);
 
   /** @ngInject */
-  function exportChartDirective(SvgFactory, StyleFactory) {
+  function exportChartDirective(StyleFactory, ExportService) {
     return {
       restrict: 'A',
       scope: {},
@@ -44,124 +44,19 @@
       link: {
         post: function postLink(scope, element, attrs) {
           var $element = $(element);
-          var aElement = angular.element('<a class="savePNG"><i class="fa fa-download"></i></a>');
+          var linkEl = angular.element('<a class="savePNG"><i class="fa fa-download"></i></a>');
 
           if (attrs.exportedFileName) {
             scope.config.exportedFileName = attrs.exportedFileName;
           }
-          element.append(aElement);
 
-          var styles;
+          if(attrs.backgroundColor){
+            scope.config.backgroundColor = attrs.backgroundColor;
+          }
+          element.append(linkEl);
 
-          var inlineAllStyles = function () {
-            var chartStyle, selector;
-
-            // Get rules from c3.css
-            for (var i = 0; i <= document.styleSheets.length - 1; i++) {
-              if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf('c3.css') !== -1) {
-                if (document.styleSheets[i].rules !== undefined) {
-                  chartStyle = document.styleSheets[i].rules;
-                } else {
-                  chartStyle = document.styleSheets[i].cssRules;
-                }
-              }
-            }
-
-            if (chartStyle !== null && chartStyle !== undefined) {
-              // SVG doesn't use CSS visibility and opacity is an attribute,
-              // not a style property. Change hidden stuff to "display: none"
-              var changeToDisplay = function () {
-                var condition = angular.element(this).css('visibility') === 'hidden' ||
-                  angular.element(this).css('opacity') === '0';
-                if (condition) {
-                  angular.element(this).css('display', 'none');
-                }
-              };
-
-              // Inline apply all the CSS rules as inline
-              for (i = 0; i < chartStyle.length; i++) {
-                if (chartStyle[i].type === 1) {
-                  selector = chartStyle[i].selectorText;
-                  styles = StyleFactory.makeStyleObject(chartStyle[i]);
-                  $element.find('svg *').each(changeToDisplay);
-                  $(selector).not('.c3-chart path').css(styles);
-                }
-
-                /* C3 puts line colour as a style attribute, which gets overridden
-                 by the global ".c3 path, .c3 line" in c3.css. The .not() above
-                 prevents that, but now we need to set fill to "none" to prevent
-                 weird beziers.
-                 Which screws with pie charts and whatnot, ergo the is() callback.
-                 */
-                $element.find('.c3-chart path')
-                  .filter(function () {
-                    return $(this).css('fill') === 'none';
-                  })
-                  .attr('fill', 'none');
-
-                $element.find('.c3-chart path')
-                  .filter(function () {
-                    return !$(this).css('fill') === 'none';
-                  })
-                  .attr('fill', function () {
-                    return $(this).css('fill');
-                  });
-              }
-            }
-          };
-
-          var createChartImages = function () {
-            var chartEl = $(element);
-            var svgEl = $(element.find('svg'));
-            var canvasEl = angular.element('<canvas style="display: none;"></canvas>')[0];
-
-
-            // Zoom! Enhance!
-            svgEl.attr('transform', 'scale(2)');
-
-            // Remove all defs, which botch PNG output
-            element.find('defs').remove();
-
-            // Copy CSS styles to Canvas
-            inlineAllStyles();
-
-            // Create PNG image
-            //var canvas = angular.element('#canvas').empty()[0];
-            canvasEl.width = chartEl.width() * 2;
-            canvasEl.height = chartEl.height() * 2;
-
-            element.append(canvasEl);
-
-            var canvasContext = canvasEl.getContext('2d');
-
-            var svg = $.trim(svgEl[0].outerHTML);
-            canvasContext.drawSvg(svg, 0, 0);
-
-
-            var filename = [];
-
-            filename.push(scope.config.exportedFileName);
-
-            filename = filename.join('-').replace(/[^\w\d]+/gi, '-');
-
-            chartEl.find('.savePNG').attr('href', canvasEl.toDataURL('png'))
-              .attr('download', function () {
-                return filename + '.png';
-              });
-
-            var svgContent = SvgFactory.createSVGContent(svgEl[0], styles);
-
-            $('.saveSVG').attr('href', 'data:text/svg,' + svgContent.source[0])
-              .attr('download', function () {
-                return filename + '.svg';
-              });
-
-            element.find('canvas').remove();
-          };
-
-
-          aElement.on('click', function () {
-            createChartImages();
+          linkEl.on('click', function () {
+            ExportService.createChartImages(element, scope.config);
           });
         }
       }
@@ -176,21 +71,61 @@
 
   angular
     .module('ngC3Export')
-    .factory('StyleFactory', function () {
-
+    .factory('ExportService', function (StyleFactory) {
       return {
-        makeStyleObject: function (rule) {
-          var styleDec = rule.style;
-          var output = {};
-          var s;
-
-          for (s = 0; s < styleDec.length; s++) {
-            output[styleDec[s]] = styleDec[styleDec[s]];
-          }
-
-          return output;
-        }
+        createChartImages: createChartImages
       };
+
+      function createChartImages (element,config) {
+          var chartEl = $(element);
+          var svgEl = $(element.find('svg')).first()[0];
+          var svgCopyEl = angular.element(svgEl.outerHTML)[0];
+          var canvasEl = angular.element('<canvas id="canvasOriginal"></canvas>')[0];
+          var emptySvgEl = angular.element('<svg id="emptysvg" xmlns="http://www.w3.org/2000/svg" version="1.1" height="2" />')[0];
+          var emptyCanvasEl = angular.element('<canvas id="canvasComputed"></canvas>')[0];
+
+          $(svgCopyEl).find('defs').remove();
+
+          canvasEl.width = chartEl.width();
+          emptyCanvasEl.width = chartEl.width();
+          canvasEl.height = chartEl.height();
+          emptyCanvasEl.height = chartEl.height();
+
+          var container = angular.element('<div style="display: none;"></div>');
+          element.append(container);
+          container.append(canvasEl);
+          container.append(emptyCanvasEl);
+          container.append(emptySvgEl);
+          container.append(svgCopyEl);
+
+          exportSvgToCanvas(svgCopyEl, canvasEl);
+
+          var canvasComputed = StyleFactory.exportStyles(canvasEl, emptyCanvasEl, svgCopyEl, emptySvgEl);
+
+          exportSvgToCanvas(svgCopyEl, canvasComputed);
+
+          exportCanvasToPng(chartEl.find('.savePNG'), canvasComputed, config.exportedFileName);
+
+          canvasEl.remove();
+          emptyCanvasEl.remove();
+          emptySvgEl.remove();
+          svgCopyEl.remove();
+        }
+
+      function exportSvgToCanvas(svg, canvas) {
+        canvg(canvas, new XMLSerializer().serializeToString(svg));
+      }
+
+      function exportCanvasToPng(linkEl,canvasEl, filename) {
+        linkEl.attr('href', canvasEl.toDataURL('png'))
+          .attr('download', function () {
+            return filename + '.png';
+          });
+      }
+
+      function exportCanvasToImage(canvasComputed) {
+        Canvas2Image.saveAsPNG(canvasComputed);
+      }
     });
 })();
 
@@ -199,64 +134,52 @@
 
   angular
     .module('ngC3Export')
-    .factory('SvgFactory', function () {
-
+    .factory('StyleFactory', function () {
       return {
-        createSVGContent: function (svg, styles) {
+        exportStyles: function (canvasOriginal, canvasComputed, svg, emptySvg) {
+          var tree = [];
+          var emptySvgDeclarationComputed = getComputedStyle(emptySvg);
+          var allElements = traverse(svg, tree);
+          var i = allElements.length;
 
-          /*
-           Copyright (c) 2013 The New York Times
-           Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-           The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-           SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-           */
-
-          //via https://github.com/NYTimes/svg-crowbar
-
-          var prefix = {
-            xmlns: "http://www.w3.org/2000/xmlns/",
-            xlink: "http://www.w3.org/1999/xlink",
-            svg: "http://www.w3.org/2000/svg"
-          };
-
-          var doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
-
-
-          svg.setAttribute("version", "1.1");
-
-          // Disabled defs because it was screwing up PNG output
-          //var defsEl = document.createElement("defs");
-          //svg.insertBefore(defsEl, svg.firstChild); //TODO   .insert("defs", ":first-child")
-
-          var styleEl = document.createElement("style");
-          //defsEl.appendChild(styleEl);
-          styleEl.setAttribute("type", "text/css");
-
-
-          // removing attributes so they aren't doubled up
-          svg.removeAttribute("xmlns");
-          svg.removeAttribute("xlink");
-
-          // These are needed for the svg
-          if (!svg.hasAttributeNS(prefix.xmlns, "xmlns")) {
-            svg.setAttributeNS(prefix.xmlns, "xmlns", prefix.svg);
+          while (i--) {
+            explicitlySetStyle(allElements[i],emptySvgDeclarationComputed);
           }
 
-          if (!svg.hasAttributeNS(prefix.xmlns, "xmlns:xlink")) {
-            svg.setAttributeNS(prefix.xmlns, "xmlns:xlink", prefix.xlink);
-          }
-
-          var source = (new XMLSerializer()).serializeToString(svg).replace('</style>', '<![CDATA[' + styles + ']]></style>');
-
-          // Quick 'n' shitty hacks to remove stuff that prevents AI from opening SVG
-          source = source.replace(/\sfont-.*?: .*?;/gi, '');
-          source = source.replace(/\sclip-.*?="url\(http:\/\/localhost:9000\/.*?\)"/gi, '');
-          source = source.replace(/\stransform="scale\(2\)"/gi, '');
-          // not needed but good so it validates
-          source = source.replace(/<defs xmlns="http:\/\/www.w3.org\/1999\/xhtml">/gi, '<defs>');
-
-          return {svg: svg, source: [doctype + source]};
+          return canvasComputed;
         }
       };
+
+      function traverse(obj, tree) {
+        tree.push(obj);
+        if (obj.hasChildNodes()) {
+          var child = obj.firstChild;
+          while (child) {
+            if (child.nodeType === 1 && child.nodeName != 'SCRIPT') {
+              traverse(child, tree);
+            }
+            child = child.nextSibling;
+          }
+        }
+        return tree;
+      }
+
+      function explicitlySetStyle(element, emptySvgDeclarationComputed) {
+        var cSSStyleDeclarationComputed = getComputedStyle(element);
+        var i, len, key, value;
+        var computedStyleStr = "";
+        for (i = 0, len = cSSStyleDeclarationComputed.length; i < len; i++) {
+          key = cSSStyleDeclarationComputed[i];
+          value = cSSStyleDeclarationComputed.getPropertyValue(key);
+          if (value !== emptySvgDeclarationComputed.getPropertyValue(key)) {
+            if (key == 'visibility' && value == 'hidden') {
+              computedStyleStr += 'display: none;';
+            } else {
+              computedStyleStr += key + ":" + value + ";";
+            }
+          }
+        }
+        element.setAttribute('style', computedStyleStr);
+      }
     });
 })();

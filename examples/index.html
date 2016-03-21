@@ -12,17 +12,19 @@
 <h1>ngC3Export examples</h1>
 
 <div ng-controller="ChartController">
+
   <h3>Line chart export with given file name</h3>
-
   <p>In this example you can add name to the exported file by filling the exported-file-name attribute.</p>
-
   <div id="my-line-chart" export-chart exported-file-name="My line chart exported"></div>
 
-  <h3>Combination chart export without given file name</h3>
-
+  <h3>Pie chart export without given file name</h3>
   <p>In this example no file name was given, so the exported file name will be the default one.</p>
+  <div id="my-pie-chart" export-chart></div>
 
+  <h3>Combination chart export without given file name</h3>
+  <p>In this example no file name was given, so the exported file name will be the default one.</p>
   <div id="my-combination-chart" export-chart></div>
+
 </div>
 
 <script src="../bower/angular/angular.js"></script>
@@ -31,6 +33,7 @@
 <script src="../dist/ng-c3-export.js"></script>
 <script src="../bower/jquery/dist/jquery.js"></script>
 <script src="../bower/canvg/dist/canvg.bundle.js"></script>
+<script src="../bower/canvas2image/canvas2image/canvas2image.js"></script>
 <script src="examples.js"></script>
 </body>
 </html>
