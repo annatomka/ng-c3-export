@@ -21,22 +21,4 @@ describe('', function() {
     expect(hasModule('ngC3Export.config')).to.be.ok;
   });
 
-  
-  it('should load filters module', function() {
-    expect(hasModule('ngC3Export.filters')).to.be.ok;
-  });
-  
-
-  
-  it('should load directives module', function() {
-    expect(hasModule('ngC3Export.directives')).to.be.ok;
-  });
-  
-
-  
-  it('should load services module', function() {
-    expect(hasModule('ngC3Export.services')).to.be.ok;
-  });
-  
-
 });
