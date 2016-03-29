@@ -61,6 +61,3 @@ SVG export support
 
 ### 0.1.0
 Initial version (Only png export possible)
-
-## Credits
-This module was built on the following Gist: https://gist.github.com/aendrew/1ad2eed6afa29e30d52e#file-exportchart-js-L29
