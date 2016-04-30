@@ -23,7 +23,7 @@
   function exportChartDirective(StyleFactory, ExportService) {
     return {
       restrict: 'A',
-      scope: {},
+      priority: 1,
       controller: function ($scope) {
         $scope.config = {
           exportedFileName: "c3 chart"
@@ -31,8 +31,8 @@
       },
       link: {
         post: function postLink(scope, element, attrs) {
-          var $element = $(element);
-          var linkEl = angular.element('<a class="savePNG"><i class="fa fa-download"></i></a>');
+
+          var linkEl = angular.element('<div class="exporter"><a class="savePNG"><i class="fa fa-download"></i></a></div>');
 
           if (attrs.exportedFileName) {
             scope.config.exportedFileName = attrs.exportedFileName;
@@ -41,7 +41,8 @@
           if(attrs.backgroundColor){
             scope.config.backgroundColor = attrs.backgroundColor;
           }
-          element.append(linkEl);
+
+          element.prepend(linkEl);
 
           linkEl.on('click', function () {
             ExportService.createChartImages(element, scope.config);
@@ -66,6 +67,7 @@
 
       function createChartImages (element,config) {
           var chartEl = $(element);
+
           var svgEl = $(element.find('svg')).first()[0];
           var svgCopyEl = angular.element(svgEl.outerHTML)[0];
           var canvasEl = angular.element('<canvas id="canvasOriginal"></canvas>')[0];
@@ -79,7 +81,7 @@
           canvasEl.height = chartEl.height();
           emptyCanvasEl.height = chartEl.height();
 
-          var container = angular.element('<div style="display: none;"></div>');
+          var container = angular.element('<div style="display: none;" class="c3"></div>');
           element.append(container);
           container.append(canvasEl);
           container.append(emptyCanvasEl);
