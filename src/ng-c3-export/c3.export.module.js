@@ -1,4 +1,4 @@
-(function (angular) {
+(function () {
 
   angular.module('ngC3Export.config', [])
     .value('ngC3Export.config', {

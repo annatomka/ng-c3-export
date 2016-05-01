@@ -1,0 +1,2 @@
+bower-canvas2image
+==================

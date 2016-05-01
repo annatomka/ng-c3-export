@@ -1,0 +1,26 @@
+{
+  "name": "canvas2image",
+  "authors": [
+    "aston zhang <zhangming1021@gmail.com>"
+  ],
+  "ignore": [
+    "tests",
+    ".travis.yml"
+  ],
+  "description": "bower canvas2image",
+  "main": "canvas2image/canvas2image.js",
+  "keywords": [
+    "canvas2image"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/tomorrownull/bower-canvas2image",
+  "_release": "cdcf6df671",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cdcf6df671b89434dc1bb1f7a84f877c30ce6cae"
+  },
+  "_source": "https://github.com/tomorrownull/bower-canvas2image.git",
+  "_target": "*",
+  "_originalSource": "canvas2image"
+}

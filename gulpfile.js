@@ -9,6 +9,7 @@ var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
 var sass = require('gulp-sass');
 var cssmin = require('gulp-cssmin');
+var ngAnnotate = require('gulp-ng-annotate');
 
 /**
  * File patterns
@@ -42,6 +43,7 @@ gulp.task('build', function() {
   gulp.src(sourceFiles)
     .pipe(plumber())
     .pipe(concat('ng-c3-export.js'))
+    .pipe(ngAnnotate())
     .pipe(gulp.dest('./dist/'))
     .pipe(uglify())
     .pipe(rename('ng-c3-export.min.js'))

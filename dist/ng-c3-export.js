@@ -1,4 +1,4 @@
-(function (angular) {
+(function () {
 
   angular.module('ngC3Export.config', [])
     .value('ngC3Export.config', {
@@ -15,20 +15,21 @@
 (function () {
   'use strict';
 
+  exportChartDirective.$inject = ["ExportService"];
   angular
     .module('ngC3Export')
     .directive('exportChart', exportChartDirective);
 
   /** @ngInject */
-  function exportChartDirective(StyleFactory, ExportService) {
+  function exportChartDirective(ExportService) {
     return {
       restrict: 'A',
       priority: 1,
-      controller: function ($scope) {
+      controller: ["$scope", function ($scope) {
         $scope.config = {
           exportedFileName: "c3 chart"
         };
-      },
+      }],
       link: {
         post: function postLink(scope, element, attrs) {
 
@@ -60,7 +61,7 @@
 
   angular
     .module('ngC3Export')
-    .factory('ExportService', function (StyleFactory) {
+    .factory('ExportService', ["StyleFactory", function (StyleFactory) {
       return {
         createChartImages: createChartImages
       };
@@ -116,7 +117,7 @@
       function exportCanvasToImage(canvasComputed) {
         Canvas2Image.saveAsPNG(canvasComputed);
       }
-    });
+    }]);
 })();
 
 (function () {

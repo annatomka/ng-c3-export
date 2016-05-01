@@ -6,7 +6,7 @@
     .directive('exportChart', exportChartDirective);
 
   /** @ngInject */
-  function exportChartDirective(StyleFactory, ExportService) {
+  function exportChartDirective(ExportService) {
     return {
       restrict: 'A',
       priority: 1,

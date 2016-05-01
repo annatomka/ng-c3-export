@@ -35,7 +35,7 @@ app.directive("dynamicChartExample", function() {
   return {
     scope: true,
     replace: true,
-    template: '<div><h3>{{ chartTitle }}</h3><div id="chart-container"></div></div>',
+    template: '<div><h4>{{ chartTitle }}</h4><div id="chart-container"></div></div>',
     link: function (scope, element, attrs) {
       scope.chart = c3.generate({
         bindto: "#chart-container",
@@ -72,7 +72,7 @@ app.directive("dynamicChartExample", function() {
       loadComics();
 
       var intervalPromise = $interval(function (i) {
-        if(i == 10) {
+        if(i == 15) {
           $interval.cancel(intervalPromise);
         }
 
@@ -83,7 +83,7 @@ app.directive("dynamicChartExample", function() {
         $scope.chartTitle = MarvelService.getTitle();
 
         loadComics();
-      },1500);
+      },2500);
 
       $scope.$on("$destroy", function () {
         if(intervalPromise){
