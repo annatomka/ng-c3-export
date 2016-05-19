@@ -16,8 +16,8 @@
     "image"
   ],
   "main": [
-    "dist/ng-c3-export.min.js",
-    "dist/ng-c3-export.min.css"
+    "dist/ng-c3-export.js",
+    "dist/ng-c3-export.css"
   ],
   "ignore": [
     "src",

@@ -17,8 +17,6 @@
           var emptySvgEl = angular.element('<svg id="emptysvg" xmlns="http://www.w3.org/2000/svg" version="1.1" height="2" />')[0];
           var emptyCanvasEl = angular.element('<canvas id="canvasComputed"></canvas>')[0];
 
-          $(svgCopyEl).find('defs').remove();
-
           canvasEl.width = chartEl.width();
           emptyCanvasEl.width = chartEl.width();
           canvasEl.height = chartEl.height();

@@ -65,7 +65,7 @@ gulp.task('sass', function () {
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('test-src', 'build', 'sass', done);
+  runSequence( 'build', 'sass', done);
 });
 
 /**
@@ -75,9 +75,6 @@ gulp.task('watch', function () {
 
   // Watch JavaScript files
   gulp.watch(sourceFiles, ['process-all']);
-
-  // watch test files and re-run unit tests when changed
-  gulp.watch(path.join(testDirectory, '/**/*.js'), ['test-src']);
 
   // watch .scss file changes
   gulp.watch( [sourceDirectory,'/**/*.scss'].join(""), ['sass']);
@@ -94,35 +91,6 @@ gulp.task('jshint', function () {
     .pipe(jshint.reporter('fail'));
 });
 
-/**
- * Run test once and exit
- */
-gulp.task('test-src', function (done) {
-  karma.start({
-    configFile: __dirname + '/karma-src.conf.js',
-    singleRun: true
-  }, done);
-});
-
-/**
- * Run test once and exit
- */
-gulp.task('test-dist-concatenated', function (done) {
-  karma.start({
-    configFile: __dirname + '/karma-dist-concatenated.conf.js',
-    singleRun: true
-  }, done);
-});
-
-/**
- * Run test once and exit
- */
-gulp.task('test-dist-minified', function (done) {
-  karma.start({
-    configFile: __dirname + '/karma-dist-minified.conf.js',
-    singleRun: true
-  }, done);
-});
 
 gulp.task('default', function () {
   runSequence('process-all', 'watch');
