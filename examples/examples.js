@@ -6,6 +6,24 @@ app.run(function () {
   console.log("ngC3Export module test initiated");
 });
 
+app.controller("SimplePieChartController", function () {
+
+  var chart = c3.generate({
+    bindto: "#simple-pie-chart",
+    data: {
+      type: 'pie',
+      columns: [
+        ['sampledata0', 10],
+        ['sampledata1', 30],
+        ['sampledata2', 20],
+        ['sampledata3', 40],
+        ['sampledata4', 120]
+      ]
+    }
+  });
+
+});
+
 app.controller("DynamicPieChartController", function ($timeout) {
 
   var chart = c3.generate({
@@ -19,15 +37,15 @@ app.controller("DynamicPieChartController", function ($timeout) {
     }
   });
 
-  // $timeout(function () {
-  //   chart.load({
-  //     columns:[
-  //       ['sample', 30,10,12],
-  //       ['sample2',10,12,31]
-  //     ],
-  //     type: 'bar'
-  //   });
-  // },5000);
+  $timeout(function () {
+    chart.load({
+      columns:[
+        ['sample', 30,10,12],
+        ['sample2',10,12,31]
+      ],
+      type: 'bar'
+    });
+  },5000);
 
 });
 

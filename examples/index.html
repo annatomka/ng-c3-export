@@ -11,6 +11,12 @@
 <body ng-app="c3ExportTest">
 <h1>ngC3Export examples</h1>
 
+<div ng-controller="SimplePieChartController">
+  <h3>Simple pie chart example</h3>
+  <p>In this example you can export a simple pie chart.</p>
+
+  <div id="simple-pie-chart" export-chart exported-file-name="Simple Pie Chart Exported"></div>
+</div>
 <div ng-controller="DynamicPieChartController">
   <h3>Dynamic pie chart example</h3>
   <p>In this example a pie chart transforms into bar chart after 5s. You can export both versions.</p>
