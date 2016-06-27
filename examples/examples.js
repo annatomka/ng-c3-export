@@ -19,15 +19,15 @@ app.controller("DynamicPieChartController", function ($timeout) {
     }
   });
 
-  $timeout(function () {
-    chart.load({
-      columns:[
-        ['sample', 30,10,12],
-        ['sample2',10,12,31]
-      ],
-      type: 'bar'
-    });
-  },5000);
+  // $timeout(function () {
+  //   chart.load({
+  //     columns:[
+  //       ['sample', 30,10,12],
+  //       ['sample2',10,12,31]
+  //     ],
+  //     type: 'bar'
+  //   });
+  // },5000);
 
 });
 

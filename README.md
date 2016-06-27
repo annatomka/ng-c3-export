@@ -56,8 +56,9 @@ Currently the following options are availabe:
 
 ## Version History
 
-### 0.2.0 (In progress)
-SVG export support
+### 0.1.7 
+* Fix c3 pie chart export
+* Added removeDefs property, by default: true (if true, it will remove defs property of the svg)
 
 ### 0.1.0
 Initial version (Only png export possible)

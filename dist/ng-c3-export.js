@@ -27,7 +27,8 @@
       priority: 1,
       controller: ["$scope", function ($scope) {
         $scope.config = {
-          exportedFileName: "c3 chart"
+          exportedFileName: "c3 chart",
+          removeDefs: true
         };
       }],
       link: {
@@ -41,6 +42,10 @@
 
           if(attrs.backgroundColor){
             scope.config.backgroundColor = attrs.backgroundColor;
+          }
+
+          if(attrs.removeDefs){
+            scope.config.removeDefs = attrs.removeDefs ==='true';
           }
 
           element.prepend(linkEl);
@@ -74,6 +79,10 @@
           var canvasEl = angular.element('<canvas id="canvasOriginal"></canvas>')[0];
           var emptySvgEl = angular.element('<svg id="emptysvg" xmlns="http://www.w3.org/2000/svg" version="1.1" height="2" />')[0];
           var emptyCanvasEl = angular.element('<canvas id="canvasComputed"></canvas>')[0];
+
+          if(config.removeDefs) {
+            $(svgCopyEl).find('defs').remove();
+          }
 
           canvasEl.width = chartEl.width();
           emptyCanvasEl.width = chartEl.width();

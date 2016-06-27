@@ -12,7 +12,8 @@
       priority: 1,
       controller: function ($scope) {
         $scope.config = {
-          exportedFileName: "c3 chart"
+          exportedFileName: "c3 chart",
+          removeDefs: true
         };
       },
       link: {
@@ -26,6 +27,10 @@
 
           if(attrs.backgroundColor){
             scope.config.backgroundColor = attrs.backgroundColor;
+          }
+
+          if(attrs.removeDefs){
+            scope.config.removeDefs = attrs.removeDefs ==='true';
           }
 
           element.prepend(linkEl);
